@@ -109,3 +109,39 @@ function applyMonacoConfiguration(root?: Node) {
         }
     }
 }
+
+function checkDuplicates(root?: Node) {
+    if (!root) return;
+
+    const duplicatedNodeGroups = [];
+    (root as JSONObject)?.members?.forEach((x=>{
+        if(hasDuplicates(x.name, root)) {
+            duplicatedNodeGroups.push(x)
+        }
+    }))
+
+    if(duplicatedNodeGroups.length) {
+        const diagnostics: monaco.editor.IMarkerData[] = [];
+        for (const node of duplicatedNodeGroups) {
+            if (!node.position) continue;          
+
+            diagnostics.push({
+            severity: monaco.MarkerSeverity.Error,
+            message: "duplicated node",
+            startLineNumber: node.position.start.line,
+            startColumn: node.position.start.column + 1,
+            endLineNumber: node.position.end.line,
+            endColumn: node.position.end.column + 1
+            });            
+        }
+         
+        monaco.editor.setModelMarkers(editor.getModel()!, "json", diagnostics);
+    }
+     
+}
+
+function hasDuplicates (name:string, root: Node) {
+    const duplicatesArray = (root as JSONObject)?.members?.filter(x => x.name === name)
+    
+    return duplicatesArray.length > 1
+}

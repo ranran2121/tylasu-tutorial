@@ -16,6 +16,8 @@ editor.onDidChangeModelContent(() => {
 
     colorizeMembers(parsingResult.data);
 
+    checkDuplicates(parsingResult.data)
+
     applyMonacoConfiguration(parsingResult.data);
 });
 

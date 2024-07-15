@@ -126,7 +126,7 @@ function checkDuplicates(root?: Node) {
             if (!node.position) continue;          
 
             diagnostics.push({
-            severity: monaco.MarkerSeverity.Error,
+            severity: monaco.MarkerSeverity.Warning,
             message: "duplicated node",
             startLineNumber: node.position.start.line,
             startColumn: node.position.start.column + 1,
